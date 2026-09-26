@@ -128,7 +128,7 @@ okhttp-tls = { module = "com.squareup.okhttp3:okhttp-tls" }
 okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 quickjs-kt = { module = "io.github.dokar3:quickjs-kt", version.ref = "quickjsKt" }
 sentry-android = { module = "io.sentry:sentry-android", version.ref = "sentry" }
-ssiv = { module = "com.github.AppFuton:subsampling-scale-image-view", version.ref = "ssiv" }
+ssiv = { module = "com.github.AppKazuji:subsampling-scale-image-view", version.ref = "ssiv" }
 workinspector = { module = "com.github.Koitharu:WorkInspector", version.ref = "workinspector" }
 androidx-window = { module = "androidx.window:window", version.ref = "window" }
 injekt-core = { module = "uy.kohesive.injekt:injekt-core", version = "1.16.1" }

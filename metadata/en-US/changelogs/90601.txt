@@ -1,10 +1,10 @@
-Rebrand to Futon; packaging and translation updates.
+Rebrand to Kazuji; packaging and translation updates.
 
 Highlights:
-- Major rebrand: app ID, icons, assets and resources were migrated from Kotatsu to Futon.
+- Major rebrand: app ID, icons, assets and resources were migrated from Kotatsu to Kazuji.
 
 Fixes:
-- Rebranded app resources and package names (Kotatsu → Futon); updated icons and assets.
+- Rebranded app resources and package names (Kotatsu → Kazuji); updated icons and assets.
 - Fixed IzzyOnDroid / F-Droid packaging issues; applied release workflow permission fixes.
 - Parser and dependency updates, and a large set of translations from Weblate.
 

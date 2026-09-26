@@ -1,6 +1,6 @@
-Futon is a free and open source manga reader for Android.
+Kazuji is a free and open source manga reader for Android.
 
-Note: Futon is an unofficial fork of Kotatsu
+Note: Kazuji is an unofficial fork of Kotatsu
 
 <strong>Main Features:</strong>
 

@@ -1,4 +1,4 @@
-# AI Coding Agent Instructions (Futon / Kotatsu fork)
+# AI Coding Agent Instructions (Kazuji / Kotatsu fork)
 
 These notes help AI agents work effectively in this Android/Kotlin codebase by capturing architecture, workflows, and project-specific patterns.
 
@@ -7,7 +7,7 @@ These notes help AI agents work effectively in this Android/Kotlin codebase by c
 - DI: Hilt (`@HiltAndroidApp` in `BaseApp`), bindings/providers in `AppModule`.
 - Data: Room `MangaDatabase` with `InvalidationTracker` observers; WorkManager used for background tasks.
 - Networking & images: OkHttp client with custom interceptors; Coil v3 configured with SVG/GIF/AVIF decoders, CBZ fetcher, cache sizes.
-- External sources: Manga parsers via `com.github.AppFuton:futon-parsers:$parsersVersion` (JitPack).
+- External sources: Manga parsers via `com.github.clquwu:kotatsu-parsers-redo:$parsersVersion` (JitPack).
 
 ## Build & Variants
 - Variants: `debug`, `release`, `nightly` (inherits `release`). Nightly auto-sets version to `NyyyyMMdd` and date-based `versionCode`.
@@ -17,7 +17,7 @@ These notes help AI agents work effectively in this Android/Kotlin codebase by c
   - `./gradlew assembleNightly` → signed nightly APK.
 - Tests:
   - Unit: `./gradlew test` (Android resources enabled).
-  - Instrumented: `./gradlew connectedAndroidTest` (runner `io.github.landwarderer.futon.HiltTestRunner`).
+  - Instrumented: `./gradlew connectedAndroidTest` (runner `io.github.joaovpimenta.kazuji.HiltTestRunner`).
 - Lint: strict; certain rules disabled (e.g., `MissingTranslation`, `PrivateResource`).
 
 ## CI/CD & Signing
@@ -32,15 +32,15 @@ These notes help AI agents work effectively in this Android/Kotlin codebase by c
 ## Key Modules & Responsibilities
 - `BaseApp`: app init, theme, TLS provider (Conscrypt on < Android 10), lifecycle callbacks registration, database observers, WorkManager config.
 - `AppModule`: DI bindings for loader context, HTML image getter, OkHttp/Coil/Image components, caches (`PageCache`, `FaviconCache`), `NetworkState`, `WorkManager`, database observers and lifecycle callbacks.
-- Package layout under `io/github/landwarderer/futon/`:
+- Package layout under `io/github/landwarderer/kazuji/`:
   - `core/`: shared infra (`db/`, `network/`, `parser/`, `prefs/`, `ui/`, `util/`, `os/`).
   - Feature packages: `reader/`, `details/`, `main/`, `search/`, `download/`, `local/`, `favourites/`, `history/`, `bookmarks/`, `scrobbling/`, `sync/`, `widget/`, etc.
 
 ## Parsers Dependency (Project-Specific)
-- Uses JitPack `futon-parsers` with version from `libs.versions.toml`.
+- Uses JitPack `kotatsu-parsers-redo` with version from `libs.versions.toml`.
 - Override for testing:
   - `./gradlew assembleDebug -DparsersVersionOverride=<short-sha>`
-  - Example: `curl -s https://api.github.com/repos/appfuton/futon-parsers/commits/master -H "Accept: application/vnd.github.sha" | cut -c -10`.
+  - Example: `curl -s https://api.github.com/repos/joaovpimenta/Kazuji-parsers/commits/master -H "Accept: application/vnd.github.sha" | cut -c -10`.
 - Interceptors add parser headers; captcha handling wired to Coil event listener.
 
 ## Conventions
@@ -50,7 +50,7 @@ These notes help AI agents work effectively in this Android/Kotlin codebase by c
 - Debug-only tooling: LeakCanary and WorkInspector active in `debug`/`nightly`.
 
 ## Integration & Deep Links
-- Manifest defines many deep links (`DetailsActivity`, `ReaderActivity`, etc.) and app-specific schemes (`futon://…`); validate flows when changing intents.
+- Manifest defines many deep links (`DetailsActivity`, `ReaderActivity`, etc.) and app-specific schemes (`kazuji://…`); validate flows when changing intents.
 - Network security config and locale config present; keep them consistent when adding features requiring webviews or language-specific behavior.
 
 ## Examples & Tips

@@ -1,0 +1,9 @@
+package io.github.joaovpimenta.kazuji.mihon.parsers.bitmap
+
+interface Bitmap {
+
+	val width: Int
+	val height: Int
+
+	fun drawBitmap(sourceBitmap: Bitmap, src: Rect, dst: Rect)
+}

@@ -61,7 +61,7 @@ Date: 2026-04-27
 ### Highlights
 - Added Tachiyomi keiyoushi extension compatibility!
 - Updated adaptive icon with new monochrome layer and fixed transparency
-- New Futon splash icon
+- New Kazuji splash icon
 - Recent manga can now be shown in the shelf widget
 - Added extension downloader activity with search functionality
 - Small UI changes (hide navigation bar labels by default, manga details panel background)
@@ -148,7 +148,7 @@ Date: 2025-12-31
 - Parser upgrade and stability improvements.
 
 ### Fixes
-- Bumped futon-parsers to a newer revision to address multiple source parsing issues.
+- Bumped kazuji-parsers to a newer revision to address multiple source parsing issues.
 - Small compatibility fixes and stability improvements related to the parser upgrade.
 
 ---
@@ -236,10 +236,10 @@ Date: 2025-12-22
 Date: 2025-12-22
 
 ### Highlights
-- Rebrand to Futon; packaging and translation updates.
+- Rebrand to Kazuji; packaging and translation updates.
 
 ### Fixes
-- Rebranded app resources and package names (Kotatsu → Futon); updated icons and assets.
+- Rebranded app resources and package names (Kotatsu → Kazuji); updated icons and assets.
 - Fixed IzzyOnDroid / F-Droid packaging issues; applied release workflow permission fixes.
 - Parser and dependency updates, and a large set of translations from Weblate.
 - Multiple crash fixes, UI tweaks, and reader improvements.
