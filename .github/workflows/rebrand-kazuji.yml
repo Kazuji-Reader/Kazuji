@@ -1,0 +1,275 @@
+name: Kazuji rebrand migration
+
+on:
+  push:
+    branches:
+      - chore/rebrand-kazuji
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chore/rebrand-kazuji
+          fetch-depth: 0
+
+      - name: Apply Kazuji rebrand
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+          import subprocess
+
+          def run(*args):
+              subprocess.run(args, check=True)
+
+          def git_mv(old: Path, new: Path):
+              if not old.exists():
+                  return
+              new.parent.mkdir(parents=True, exist_ok=True)
+              run("git", "mv", str(old), str(new))
+
+          # Move Kotlin package roots to the new application namespace.
+          for variant in ("main", "debug", "nightly", "release", "test", "androidTest"):
+              old = Path(f"app/src/{variant}/kotlin/io/github/landwarderer/futon")
+              new = Path(f"app/src/{variant}/kotlin/io/github/joaovpimenta/kazuji")
+              git_mv(old, new)
+
+          # Rename remaining tracked paths that still carry the previous brand.
+          tracked = subprocess.check_output(["git", "ls-files", "-z"]).decode().split("\0")
+          for raw in sorted((p for p in tracked if p), key=len, reverse=True):
+              old = Path(raw)
+              if not old.exists():
+                  continue
+              new_raw = raw.replace("FUTON", "KAZUJI").replace("Futon", "Kazuji").replace("futon", "kazuji")
+              if new_raw != raw:
+                  git_mv(old, Path(new_raw))
+
+          # Replace textual brand/package references across all tracked UTF-8 files.
+          replacements = [
+              ("https://github.com/AppFuton/Futon", "https://github.com/joaovpimenta/Kazuji"),
+              ("https://github.com/appfuton/futon", "https://github.com/joaovpimenta/Kazuji"),
+              ("https://github.com/FutonApp/Futon", "https://github.com/joaovpimenta/Kazuji"),
+              ("AppFuton/Futon", "joaovpimenta/Kazuji"),
+              ("appfuton/futon", "joaovpimenta/Kazuji"),
+              ("FutonApp/Futon", "joaovpimenta/Kazuji"),
+              ("io.github.landwarderer.futon", "io.github.joaovpimenta.kazuji"),
+              ("org.koitharu.futon", "io.github.joaovpimenta.kazuji"),
+              ("FUTON", "KAZUJI"),
+              ("Futon", "Kazuji"),
+              ("futon", "kazuji"),
+          ]
+
+          tracked = subprocess.check_output(["git", "ls-files", "-z"]).decode().split("\0")
+          for raw in (p for p in tracked if p):
+              path = Path(raw)
+              if not path.is_file():
+                  continue
+              data = path.read_bytes()
+              if b"\x00" in data:
+                  continue
+              try:
+                  text = data.decode("utf-8")
+              except UnicodeDecodeError:
+                  continue
+              updated = text
+              for old, new in replacements:
+                  updated = updated.replace(old, new)
+              if updated != text:
+                  path.write_text(updated, encoding="utf-8")
+
+          # Remove upstream-only translation integration until Kazuji has its own service.
+          if Path(".weblate").exists():
+              run("git", "rm", ".weblate")
+
+          # Replace upstream service endpoints with Kazuji-owned/local-safe values.
+          constants = Path("app/src/main/res/values/constants.xml")
+          text = constants.read_text(encoding="utf-8")
+          text = re.sub(
+              r'<string name="url_github"[^>]*>.*?</string>',
+              '<string name="url_github" translatable="false">https://github.com/joaovpimenta/Kazuji</string>',
+              text,
+          )
+          text = re.sub(
+              r'<string name="url_weblate"[^>]*>.*?</string>',
+              '<string name="url_weblate" translatable="false"></string>',
+              text,
+          )
+          text = re.sub(
+              r'<string name="url_user_manual"[^>]*>.*?</string>',
+              '<string name="url_user_manual" translatable="false">https://github.com/joaovpimenta/Kazuji#readme</string>',
+              text,
+          )
+          text = re.sub(
+              r'<string name="github_updates_repo"[^>]*>.*?</string>',
+              '<string name="github_updates_repo" translatable="false">joaovpimenta/Kazuji</string>',
+              text,
+          )
+          text = re.sub(
+              r'<string name="tg_backup_bot_name"[^>]*>.*?</string>',
+              '<string name="tg_backup_bot_name" translatable="false"></string>',
+              text,
+          )
+          text = re.sub(
+              r'<string name="app_icon_url"[^>]*>.*?</string>',
+              '<string name="app_icon_url" translatable="false">https://raw.githubusercontent.com/joaovpimenta/Kazuji/devel/metadata/en-US/icon.png</string>',
+              text,
+          )
+          text = re.sub(r'\n\s*<item>https://sync\.kazujiapp\.pages\.dev</item>', '', text)
+          constants.write_text(text, encoding="utf-8")
+
+          # Do not invent replacement web domains. Keep only the Kazuji custom URI scheme.
+          manifest = Path("app/src/main/AndroidManifest.xml")
+          text = manifest.read_text(encoding="utf-8")
+          for host in ("kazuji.app", "kazujiapp.pages.dev"):
+              pattern = (
+                  r'\n\s*<intent-filter android:autoVerify="true">(?:(?!</intent-filter>).)*'
+                  + re.escape(host)
+                  + r'(?:(?!</intent-filter>).)*</intent-filter>'
+              )
+              text = re.sub(pattern, '', text, flags=re.S)
+          manifest.write_text(text, encoding="utf-8")
+
+          # Make Sentry ownership configurable instead of pointing at the previous project.
+          gradle = Path("app/build.gradle")
+          text = gradle.read_text(encoding="utf-8")
+          text = re.sub(r'\n\s*org = "appkazuji"', '\n\torg = System.getenv(\'SENTRY_ORG\') ?: \'\'', text)
+          text = re.sub(r'\n\s*projectName = "android"', '\n\tprojectName = System.getenv(\'SENTRY_PROJECT\') ?: \'android\'', text)
+          gradle.write_text(text, encoding="utf-8")
+
+          # Fix documentation references to the parser project after the brand-wide replacement.
+          for name in ("AGENTS.md", ".github/copilot-instructions.md"):
+              path = Path(name)
+              if not path.exists():
+                  continue
+              text = path.read_text(encoding="utf-8")
+              text = text.replace("https://github.com/AppKazuji/kazuji-parsers", "https://github.com/Kotatsu-Redo/kotatsu-parsers-redo")
+              text = text.replace("https://github.com/joaovpimenta/Kazuji-parsers", "https://github.com/Kotatsu-Redo/kotatsu-parsers-redo")
+              text = text.replace("appkazuji/kazuji-parsers", "Kotatsu-Redo/kotatsu-parsers-redo")
+              text = text.replace("kazuji-parsers", "kotatsu-parsers-redo")
+              text = text.replace("com.github.AppKazuji:kotatsu-parsers-redo", "com.github.clquwu:kotatsu-parsers-redo")
+              text = text.replace("com.github.AppKazuji:kazuji-parsers", "com.github.clquwu:kotatsu-parsers-redo")
+              path.write_text(text, encoding="utf-8")
+
+          # Correct a stale issue-template label that still called the app Kotatsu.
+          issue_template = Path(".github/ISSUE_TEMPLATE.md")
+          if issue_template.exists():
+              text = issue_template.read_text(encoding="utf-8").replace("* Kotatsu version: ?", "* Kazuji version: ?")
+              issue_template.write_text(text, encoding="utf-8")
+
+          # Kazuji-specific README; retain attribution to the original Kotatsu project and parser ecosystem.
+          readme = """<div align="center">
+
+          # Kazuji
+
+          **Kazuji is a free and open-source manga reader for Android with built-in online content sources.**
+
+          ![Android 6.0](https://img.shields.io/badge/android-6.0+-brightgreen)
+          [![License](https://img.shields.io/github/license/joaovpimenta/Kazuji)](https://github.com/joaovpimenta/Kazuji/blob/devel/LICENSE)
+          [![Sources](https://img.shields.io/badge/sources-Kotatsu--Redo-informational)](https://github.com/Kotatsu-Redo/kotatsu-parsers-redo)
+
+          </div>
+
+          ## Features
+
+          - Online manga catalogues powered by the Kotatsu-Redo parser ecosystem
+          - Support for Tachiyomi/Keiyoushi extensions
+          - Search by title, genres, and filters
+          - Favorites with custom categories
+          - Reading history, bookmarks, and incognito mode
+          - Offline downloads and CBZ support
+          - Material You interface for phones, tablets, and larger screens
+          - Standard and Webtoon reader modes
+          - New-chapter notifications, recommendations, and tracking
+          - AniList, MyAnimeList, Kitsu, and Shikimori integrations
+          - Password/biometric protection
+          - Android 6.0+ support
+
+          ## Development
+
+          ### Requirements
+
+          - JDK 17
+          - Android SDK 36
+          - Android build tools 35.0.0
+          - Android Studio or Android SDK command-line tools
+
+          ### Clone and build
+
+          ```bash
+          git clone https://github.com/joaovpimenta/Kazuji.git
+          cd Kazuji
+          ./gradlew assembleDebug
+          ```
+
+          Debug APK:
+
+          ```text
+          app/build/outputs/apk/debug/app-debug.apk
+          ```
+
+          ### Tests and checks
+
+          ```bash
+          ./gradlew test
+          ./gradlew lint
+          ./gradlew check
+          ```
+
+          See [CONTRIBUTING.md](./CONTRIBUTING.md), [AGENTS.md](./AGENTS.md), and [DESIGN.md](./DESIGN.md) for project conventions.
+
+          ## Screenshots
+
+          <div align="center">
+              <img src="./metadata/en-US/images/phoneScreenshots/1.png" alt="Kazuji mobile view" width="250"/>
+              <img src="./metadata/en-US/images/phoneScreenshots/2.png" alt="Kazuji mobile view" width="250"/>
+              <img src="./metadata/en-US/images/phoneScreenshots/3.png" alt="Kazuji mobile view" width="250"/>
+          </div>
+
+          ## License
+
+          Kazuji is distributed under the GNU General Public License v3.0. See [LICENSE](./LICENSE).
+
+          ## Upstream attribution
+
+          Kazuji builds on the open-source work of the [Kotatsu](https://github.com/KotatsuApp/Kotatsu) project and uses the actively maintained [Kotatsu-Redo parsers](https://github.com/Kotatsu-Redo/kotatsu-parsers-redo).
+
+          The Kotatsu project is the original codebase in this lineage. References to Kotatsu that remain in dependency coordinates, parser packages, compatibility code, or attribution are intentional.
+          """
+          # Normalize indentation introduced by the workflow YAML.
+          readme = "\n".join(line[10:] if line.startswith("          ") else line for line in readme.splitlines()).strip() + "\n"
+          Path("README.md").write_text(readme, encoding="utf-8")
+
+          # Remove the temporary migration workflow from the final tree.
+          run("git", "rm", ".github/workflows/rebrand-kazuji.yml")
+          PY
+
+      - name: Audit previous brand references
+        shell: bash
+        run: |
+          if git grep -n -I -i -E 'futon' -- . ':!CHANGELOG.md'; then
+            echo "Unexpected previous-brand references remain."
+            exit 1
+          fi
+          echo "Kotatsu references retained for dependency/compatibility/attribution audit:"
+          git grep -n -I -i -E 'kotatsu' -- . | head -n 250 || true
+
+      - name: Commit rebrand
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: rebrand Futon as Kazuji"
+          git push origin HEAD:chore/rebrand-kazuji
+
+      - name: Build and unit test
+        shell: bash
+        run: |
+          ./gradlew assembleDebug testDebugUnitTest
