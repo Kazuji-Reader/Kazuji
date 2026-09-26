@@ -40,7 +40,7 @@ These notes help AI agents work effectively in this Android/Kotlin codebase by c
 - Uses JitPack `kotatsu-parsers-redo` with version from `libs.versions.toml`.
 - Override for testing:
   - `./gradlew assembleDebug -DparsersVersionOverride=<short-sha>`
-  - Example: `curl -s https://api.github.com/repos/joaovpimenta/Kazuji-parsers/commits/master -H "Accept: application/vnd.github.sha" | cut -c -10`.
+  - Example: `curl -s https://api.github.com/repos/Kotatsu-Redo/kotatsu-parsers-redo/commits/master -H "Accept: application/vnd.github.sha" | cut -c -10`.
 - Interceptors add parser headers; captcha handling wired to Coil event listener.
 
 ## Conventions
