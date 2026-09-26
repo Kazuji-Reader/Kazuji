@@ -86,7 +86,7 @@ jobs:
 
           # Remove upstream-only translation integration until Kazuji has its own service.
           if Path(".weblate").exists():
-              run("git", "rm", ".weblate")
+              run("git", "rm", "-f", ".weblate")
 
           # Replace upstream service endpoints with Kazuji-owned/local-safe values.
           constants = Path("app/src/main/res/values/constants.xml")
@@ -247,7 +247,7 @@ jobs:
           Path("README.md").write_text(readme, encoding="utf-8")
 
           # Remove the temporary migration workflow from the final tree.
-          run("git", "rm", ".github/workflows/rebrand-kazuji.yml")
+          run("git", "rm", "-f", ".github/workflows/rebrand-kazuji.yml")
           PY
 
       - name: Audit previous brand references
