@@ -246,14 +246,15 @@ jobs:
           readme = "\n".join(line[10:] if line.startswith("          ") else line for line in readme.splitlines()).strip() + "\n"
           Path("README.md").write_text(readme, encoding="utf-8")
 
-          # Remove the temporary migration workflow from the final tree.
-          run("git", "rm", "-f", ".github/workflows/rebrand-kazuji.yml")
+          # GitHub Actions tokens cannot push workflow-file changes. Restore workflows
+          # here; they are updated separately through the GitHub connector.
+          run("git", "restore", "--source=HEAD", "--", ".github/workflows")
           PY
 
       - name: Audit previous brand references
         shell: bash
         run: |
-          if git grep -n -I -i -E 'futon' -- . ':!CHANGELOG.md'; then
+          if git grep -n -I -i -E 'futon' -- . ':!.github/workflows/**'; then
             echo "Unexpected previous-brand references remain."
             exit 1
           fi
