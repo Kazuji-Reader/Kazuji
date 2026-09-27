@@ -1,0 +1,9 @@
+Date: 2026-09-27
+
+Highlights
+- Rebranded the project as Kazuji with a new app icon and identity
+- Preserved compatibility with Futon and Kotatsu links
+- Established package ID io.github.kazuji
+
+Maintenance
+- Documented Kazuji's lineage as a fork of Futon and Kotatsu

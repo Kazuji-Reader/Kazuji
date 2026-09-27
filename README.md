@@ -1,8 +1,10 @@
 <div align="center">
 
-**Futon is a free and open-source manga reader for Android with built-in online content sources.**
+<img src="./kazuji.png" alt="Kazuji icon" width="160"/>
 
-![Android 6.0](https://img.shields.io/badge/android-6.0+-brightgreen) [![Sources count](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fraw.githubusercontent.com%2FKotatsu-Redo%2Fkotatsu-parsers-redo%2Frefs%2Fheads%2Fmaster%2F.github%2Fsummary.yaml&query=total&label=manga%20sources&color=%23E9321C)](https://github.com/Kotatsu-Redo/kotatsu-parsers-redo) [![License](https://img.shields.io/github/license/AppFuton/Futon)](https://github.com/AppFuton/Futon/blob/devel/LICENSE) [![GitHub Release](https://img.shields.io/github/v/release/appfuton/futon?sort=date&display_name=tag&style=flat&link=https%3A%2F%2Fgithub.com%2FAppFuton%2FFuton%2Freleases%2Flatest)](https://github.com/AppFuton/Futon/releases/latest) [![IzzyOnDroid Yearly Downloads](https://img.shields.io/badge/dynamic/json?url=https://dlstats.izzyondroid.org/iod-stats-collector/stats/basic/yearly/rolling.json&query=$.['io.github.landwarderer.futon']&label=IzzyOnDroid%20yearly%20downloads)](https://apt.izzysoft.de/packages/io.github.landwarderer.futon) [![F-Droid Version](https://img.shields.io/badge/F--Droid-%2311AB00.svg?logo=f-droid&logoColor=white)](https://f-droid.org/en/packages/io.github.landwarderer.futon/) [![Open Source Helpers](https://www.codetriage.com/appfuton/futon/badges/users.svg)](https://www.codetriage.com/appfuton/futon) [![Discord](https://img.shields.io/discord/1452862077134700628)
+**Kazuji is a free and open-source manga reader for Android with built-in online content sources.**
+
+![Android 6.0](https://img.shields.io/badge/android-6.0+-brightgreen) [![Sources count](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fraw.githubusercontent.com%2FKotatsu-Redo%2Fkotatsu-parsers-redo%2Frefs%2Fheads%2Fmaster%2F.github%2Fsummary.yaml&query=total&label=manga%20sources&color=%23E9321C)](https://github.com/Kotatsu-Redo/kotatsu-parsers-redo) [![License](https://img.shields.io/github/license/joaovpimenta/Kazuji)](https://github.com/joaovpimenta/Kazuji/blob/devel/LICENSE) [![GitHub Release](https://img.shields.io/github/v/release/joaovpimenta/Kazuji?sort=date&display_name=tag&style=flat)](https://github.com/joaovpimenta/Kazuji/releases/latest) [![IzzyOnDroid Yearly Downloads](https://img.shields.io/badge/dynamic/json?url=https://dlstats.izzyondroid.org/iod-stats-collector/stats/basic/yearly/rolling.json&query=$.['io.github.kazuji']&label=IzzyOnDroid%20yearly%20downloads)](https://apt.izzysoft.de/packages/io.github.kazuji) [![F-Droid Version](https://img.shields.io/badge/F--Droid-%2311AB00.svg?logo=f-droid&logoColor=white)](https://f-droid.org/en/packages/io.github.kazuji/) [![Discord](https://img.shields.io/discord/1452862077134700628)
 ](https://discord.gg/9sqBHXhwzz)
 
 
@@ -39,8 +41,8 @@
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/AppFuton/Futon.git
-   cd Futon
+   git clone https://github.com/joaovpimenta/Kazuji.git
+   cd Kazuji
    ```
 
 2. **Build debug APK:**
@@ -88,6 +90,10 @@
   ```
 
 For detailed contribution guidelines, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+Kazuji uses Android package `io.github.kazuji`. Android treats it as a separate app from Futon; export a backup from Futon and import it into Kazuji to move app data.
+
+Kazuji accepts `kazuji://` links as well as legacy `futon://` and `kotatsu://` links.
 </div>
 ### In-App Screenshots
 
@@ -109,13 +115,13 @@ For detailed contribution guidelines, see [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ### Downloads
 
-[<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroidButtonGreyBorder_nofont.png" height="80" alt="Get it at IzzyOnDroid">](https://apt.izzysoft.de/packages/io.github.landwarderer.futon)
+[<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroidButtonGreyBorder_nofont.png" height="80" alt="Get it at IzzyOnDroid">](https://apt.izzysoft.de/packages/io.github.kazuji)
 [<img src="https://f-droid.org/badge/get-it-on.png"
     alt="Get it on F-Droid"
-    height="80">](https://f-droid.org/packages/io.github.landwarderer.futon)
+    height="80">](https://f-droid.org/packages/io.github.kazuji)
 
 ### Localization
-Help us by translating
+Kazuji currently carries forward the [Futon Weblate translation project](https://hosted.weblate.org/engage/futon/).
 
 <a href="https://hosted.weblate.org/engage/futon/"><img src="https://hosted.weblate.org/widget/futon/open-graph.png" width="500"></a>
 <a href="https://hosted.weblate.org/engage/futon/"><img src="https://hosted.weblate.org/widget/futon/horizontal-auto.svg" width="500"></a>
@@ -165,17 +171,18 @@ where the content is hosted.
 
 <div align="left">
 
-**Futon is built upon the exceptional work of the [Kotatsu](https://github.com/KotatsuApp/Kotatsu) project.**
+**Kazuji is a fork of [Futon](https://github.com/AppFuton/Futon), which is itself a fork of [Kotatsu](https://github.com/KotatsuApp/Kotatsu).**
 
 We are deeply grateful to:
 
 * **The original Kotatsu developers** for creating such an outstanding manga reader and making it open source
+* **The Futon developers** for maintaining the fork that serves as Kazuji's immediate foundation
 * **The Kotatsu community** for their contributions, testing, and support
-* **All translators** who helped localize Kotatsu through [Weblate](https://hosted.weblate.org/engage/kotatsu/)
+* **All translators** who localized Kotatsu and Futon through Weblate
 * **[Kotatsu-Redo](https://github.com/Kotatsu-Redo/kotatsu-parsers-redo)** for continuing parser development and maintenance
 * **[Kototoro](https://github.com/Kototoro-app/Kototoro)** for the Tachiyomi extension integration guide
 
-This project stands on the shoulders of giants. The Kotatsu team's dedication to creating a feature-rich, user-friendly manga reader has provided an incredible foundation for Futon to build upon.
+Kazuji continues the work of both upstream projects and preserves their attribution. The Kotatsu team's dedication created the foundation that Futon extended and Kazuji continues.
 
 **Thank you to everyone who contributed to Kotatsu — your work continues to benefit the manga reading community!**
 

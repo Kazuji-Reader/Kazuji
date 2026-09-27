@@ -4,6 +4,16 @@ All notable changes to this project are documented in this file.
 
 The format is based on "Keep a Changelog" and follows semantic versioning where possible.
 
+## 9.8.2
+Date: 2026-09-27
+
+### Rebranding
+- Rebranded the project as Kazuji and adopted the supplied Kazuji icon and warm ink-and-paper palette.
+- Renamed the Android namespace and application ID to `io.github.kazuji`.
+- Recorded the lineage: Kazuji is a fork of Futon, itself a fork of Kotatsu.
+- Kept the previous Futon deep-link scheme available for existing links.
+- The new application ID installs separately from Futon; export and import a backup to move app data.
+
 ## 9.8.1
 Date: 2026-08-16
 

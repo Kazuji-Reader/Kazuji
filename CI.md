@@ -1,6 +1,6 @@
 # CI/CD Setup Guide
 
-This document describes the automated build and release process for Futon.
+This document describes the automated build and release process for Kazuji.
 
 ## Automated Workflows
 
