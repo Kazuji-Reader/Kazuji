@@ -1,5 +1,11 @@
 # Changelog
 
+## 9.8.3
+Date: 2026-09-27
+
+### Maintenance
+- Fixed the Android SDK package selection used by the GitHub release workflow.
+
 All notable changes to this project are documented in this file.
 
 The format is based on "Keep a Changelog" and follows semantic versioning where possible.

@@ -1,0 +1,6 @@
+Date: 2026-09-27
+
+Maintenance
+- Rebranded the application as Kazuji and added the new app icon.
+- Preserved futon:// and kotatsu:// links for compatibility.
+- Fixed Android SDK setup in the GitHub release workflow.
