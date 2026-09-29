@@ -74,6 +74,7 @@
     <string name="domain">Domínio</string>
     <string name="app_update_available">Uma nova versão do aplicativo está disponível</string>
     <string name="open_in_browser">Abrir no navegador</string>
+    <string name="browser_action_complete_hint">Conclua a interação na página e toque em Feito para tentar novamente. Se a página estiver bloqueada, confira o AdBlock nas configurações.</string>
     <string name="notifications">Notificações</string>
     <string name="new_chapters">Novos capítulos</string>
     <string name="download">Baixar</string>
