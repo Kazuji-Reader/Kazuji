@@ -19,6 +19,7 @@ import org.koitharu.kotatsu.parsers.util.runCatchingCancellable
 import javax.inject.Inject
 
 private val APP_DEEP_LINK_SCHEMES = setOf("kazuji", "futon", "kotatsu")
+private val APP_DEEP_LINK_HOSTS = setOf("kazuji-reader.github.io", "futonapp.pages.dev")
 
 @Reusable
 class MangaLinkResolver @Inject constructor(
@@ -30,7 +31,7 @@ class MangaLinkResolver @Inject constructor(
 	suspend fun resolve(uri: Uri): Manga {
 		return if (
 			APP_DEEP_LINK_SCHEMES.any { uri.scheme.equals(it, ignoreCase = true) } ||
-			uri.host == "futonapp.pages.dev"
+			APP_DEEP_LINK_HOSTS.any { uri.host.equals(it, ignoreCase = true) }
 		) {
 			resolveAppLink(uri)
 		} else {
