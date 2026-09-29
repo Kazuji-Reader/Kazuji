@@ -13,6 +13,7 @@ import org.koitharu.kotatsu.parsers.model.Manga
 import org.koitharu.kotatsu.parsers.model.MangaListFilter
 import org.koitharu.kotatsu.parsers.model.MangaSource
 import org.koitharu.kotatsu.parsers.util.almostEquals
+
 import org.koitharu.kotatsu.parsers.util.ifNullOrEmpty
 import org.koitharu.kotatsu.parsers.util.levenshteinDistance
 import org.koitharu.kotatsu.parsers.util.runCatchingCancellable
@@ -20,6 +21,13 @@ import javax.inject.Inject
 
 private val APP_DEEP_LINK_SCHEMES = setOf("kazuji", "futon", "kotatsu")
 private val APP_DEEP_LINK_HOSTS = setOf("kazuji-reader.github.io", "futonapp.pages.dev")
+
+internal fun isMangaAppLinkEndpoint(scheme: String?, host: String?, pathSegments: List<String>): Boolean =
+	if (APP_DEEP_LINK_SCHEMES.any { scheme.equals(it, ignoreCase = true) }) {
+		host.equals("manga", ignoreCase = true)
+	} else {
+		pathSegments.singleOrNull() == "manga"
+	}
 
 @Reusable
 class MangaLinkResolver @Inject constructor(
@@ -40,7 +48,7 @@ class MangaLinkResolver @Inject constructor(
 	}
 
 	private suspend fun resolveAppLink(uri: Uri): Manga? {
-		require(uri.pathSegments.singleOrNull() == "manga") { "Invalid url" }
+		require(isMangaAppLinkEndpoint(uri.scheme, uri.host, uri.pathSegments)) { "Invalid url" }
 		uri.getQueryParameter("id")?.let { mangaId ->
 			// short url
 			return dataRepository.findMangaById(mangaId.toLong(), withChapters = false)
